@@ -128,7 +128,7 @@ if($install) {
 	'installing'
 	
 	[void](New-Item "$pluginPath\NodeLoad.js" -Type File -Force -Value @'
-const onHeadersReceived = (details, callback) => {
+const onHeadersReceived = (details, callback) => { // SDCEx Hook headers to disable CSP blocking. This might be a security issue, because you can then send requests to everywhere you want?
 	let response = { cancel: false };
 	let responseHeaders = details.responseHeaders;
 	if(responseHeaders['content-security-policy'] != null) {

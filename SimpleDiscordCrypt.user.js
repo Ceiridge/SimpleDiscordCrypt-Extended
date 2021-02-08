@@ -1364,7 +1364,7 @@ function Init(nonInvasive)
         nodeHttps = require('https');
 		nodeHttpsOptions = { agent: new nodeHttps.Agent({ keepAlive: true }), timeout: 120000 };
 		
-		// SDCEx Deleting window.require and window.module doesn't seem possible for now. Maybe it should be fixed in the future to prevent RCEs?
+		// SDCEx Deleting window.require and window.module doesn't seem possible for now. Maybe it should be fixed here in the future to prevent RCEs? This might conflict with other plugins?
     }
 
     Object.assign(Utils, {
