@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         SimpleDiscordCrypt Extended
 // @namespace    https://github.com/Ceiridge/SimpleDiscordCrypt-Extended
-// @version      1.4
+// @version      1.4.1.0
 // @description  I hope people won't start calling this SDC ^_^
 // @author       An0, leogx9r, Ceiridge
 // @license      LGPLv3 - https://www.gnu.org/licenses/lgpl-3.0.txt
@@ -2019,13 +2019,13 @@ function Init(nonInvasive)
                         color: BaseColorInt,
                         author: {
                             name: "-----SYSTEM MESSAGE-----",
-                            icon_url: "https://i.imgur.com/pFuRfDE.png",
+                            icon_url: "https://raw.githubusercontent.com/Ceiridge/SimpleDiscordCrypt-Extended/master/images/internalkey64.png",
                             url: "https://github.com/Ceiridge/SimpleDiscordCrypt-Extended"
                         },
                         description: sysmsg,
                         footer: {
                             text: "SimpleDiscordCrypt",
-                            icon_url: "https://i.imgur.com/zWXtTpX.png",
+                            icon_url: "https://raw.githubusercontent.com/Ceiridge/SimpleDiscordCrypt-Extended/master/logo.png",
                         }
                     }
                 }
@@ -2822,7 +2822,7 @@ async function decryptAttachment(key, keyHash, message, attachment, channelConfi
         }
         else {
             let id = Patcher.FreeImageId++;
-            url = `https://media.discordapp.net/attachments/479272118538862592/479272171944804377/keylogo.png#${id}`;
+            url = `https://raw.githubusercontent.com/Ceiridge/SimpleDiscordCrypt-Extended/master/images/internalkey1700.png#${id}`;
             let bitmap = await createImageBitmap(blob); //resets image rotation it seems
             width = bitmap.width;
             height = bitmap.height;
@@ -2956,7 +2956,7 @@ function embedEncrypted(message, url, queryString) {
         message.embeds.push({
             type: 'video',
             url,
-            thumbnail: { url: "https://media.discordapp.net/attachments/449522590978146304/465783850144890890/key128.png", width: 128, height: 128 },
+            thumbnail: { url: "https://raw.githubusercontent.com/Ceiridge/SimpleDiscordCrypt-Extended/master/images/key128.png", width: 128, height: 128 },
             video: { url, width: 400, height: 300 }
         });
     }
@@ -3478,13 +3478,13 @@ async function handleSend(channelId, message, forceSimple) {
             color: BaseColorInt,
             author: {
                 name: "-----ENCRYPTED MESSAGE-----",
-                icon_url: "https://i.imgur.com/pFuRfDE.png",
+                icon_url: "https://raw.githubusercontent.com/Ceiridge/SimpleDiscordCrypt-Extended/master/images/internalkey64.png",
                 url: "https://github.com/Ceiridge/SimpleDiscordCrypt-Extended"
             },
             description: payload,
             footer: {
                 text: "SimpleDiscordCrypt",
-                icon_url: "https://i.imgur.com/zWXtTpX.png",
+                icon_url: "https://raw.githubusercontent.com/Ceiridge/SimpleDiscordCrypt-Extended/master/logo.png",
             }
         };
     }
