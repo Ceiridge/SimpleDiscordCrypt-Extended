@@ -1,5 +1,5 @@
 <h1 align="center">
-    <img src="https://github.com/Ceiridge/SimpleDiscordCrypt-Extended/raw/master/images/avatar.png" height="50" width="50">
+    <img src="https://github.com/Ceiridge/SimpleDiscordCrypt-Extended/raw/master/logo.png" height="50" width="50">
     SimpleDiscordCrypt
 </h1>
 
