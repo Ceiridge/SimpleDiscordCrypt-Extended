@@ -3,9 +3,7 @@
 // @namespace    https://github.com/Ceiridge/SimpleDiscordCrypt-Extended
 // @version      1.4
 // @description  I hope people won't start calling this SDC ^_^
-// @author       An0
-// @author       leogx9r
-// @author       Ceiridge
+// @author       An0, leogx9r, Ceiridge
 // @license      LGPLv3 - https://www.gnu.org/licenses/lgpl-3.0.txt
 // @downloadURL  https://github.com/Ceiridge/SimpleDiscordCrypt-Extended/raw/master/SimpleDiscordCrypt.user.js
 // @updateURL    https://github.com/Ceiridge/SimpleDiscordCrypt-Extended/raw/master/SimpleDiscordCrypt.meta.js
