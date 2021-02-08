@@ -1,13 +1,15 @@
 // ==UserScript==
 // @name         SimpleDiscordCrypt
-// @namespace    https://gitlab.com/An0/SimpleDiscordCrypt
-// @version      1.3.5.7
+// @namespace    https://github.com/Ceiridge/SimpleDiscordCrypt-Extended
+// @version      1.4
 // @description  I hope people won't start calling this SDC ^_^
 // @author       An0
+// @author       leogx9r
+// @author       Ceiridge
 // @license      LGPLv3 - https://www.gnu.org/licenses/lgpl-3.0.txt
-// @downloadURL  https://gitlab.com/An0/SimpleDiscordCrypt/raw/master/SimpleDiscordCrypt.user.js
-// @updateURL    https://gitlab.com/An0/SimpleDiscordCrypt/raw/master/SimpleDiscordCrypt.meta.js
-// @icon         https://gitlab.com/An0/SimpleDiscordCrypt/raw/master/logo.png
+// @downloadURL  https://github.com/Ceiridge/SimpleDiscordCrypt-Extended/raw/master/SimpleDiscordCrypt.user.js
+// @updateURL    https://github.com/Ceiridge/SimpleDiscordCrypt-Extended/raw/master/SimpleDiscordCrypt.meta.js
+// @icon         https://github.com/Ceiridge/SimpleDiscordCrypt-Extended/raw/master/logo.png
 // @match        https://*.discord.com/channels/*
 // @match        https://*.discord.com/activity
 // @match        https://*.discord.com/login*
@@ -19,7 +21,9 @@
 // @grant        unsafeWindow
 // @grant        GM_xmlhttpRequest
 // @connect      cdn.discordapp.com
-// @connect      gitlab.com
+// @connect      github.com
+// @connect      githubusercontent.com
+// @connect      raw.githubusercontent.com
 // ==/UserScript==
 
 // Credits for inspiration to the original DiscordCrypt
@@ -27,8 +31,6 @@
 (function() {
 
 'use strict';
-
-const BlacklistUrl = "https://gitlab.com/An0/SimpleDiscordCrypt/raw/master/blacklist.txt";
 
 const SavedLocalStorage = (typeof(localStorage) !== 'undefined') ? localStorage : null;
 const FixedCsp = (typeof(CspDisarmed) !== 'undefined') ? CspDisarmed : false;
@@ -1254,7 +1256,6 @@ var Utils = {
 };
 var DataBase;
 var Cache;
-var Blacklist;
 var Patcher;
 var KeyRotators;
 var ImageZoom;
@@ -1964,11 +1965,9 @@ function Init(nonInvasive)
             return (Cache.channelConfig != null) ? Cache.channelConfig.k : DataBase.personalKeyHash;
         },
         GetCurrentChannelEncrypt: () => {
-            return Cache.channelConfig != null && Cache.channelConfig.e && Cache.channelBlacklist !== 1;
+            return Cache.channelConfig != null && Cache.channelConfig.e;
         },
         ToggleCurrentChannelEncrypt: function() {
-            if(Cache.channelBlacklist === 1) return;
-
             if(Cache.channelConfig == null)
                 Cache.channelConfig = this.NewChannelConfig(Cache.channelId, null, null, true);
             else
@@ -2002,13 +2001,8 @@ function Init(nonInvasive)
         RefreshCache: () => {
             Cache.channelId = Discord.getChannelId();
             Cache.channelConfig = DataBase.channels[Cache.channelId];
-            if(Cache.channelConfig != null) Cache.channelConfig.l = Date.now();
-            if(Blacklist != null) {
-                let channel = Discord.getChannel(Cache.channelId);
-                if(channel == null) return false;
-                let guildId = channel.guild_id;
-                Cache.channelBlacklist = (guildId == null) ? null : Blacklist[guildId];
-            }
+			if(Cache.channelConfig != null) Cache.channelConfig.l = Date.now();
+			
             return true;
         },
 
@@ -3413,10 +3407,6 @@ async function processEmbeds(message) {
 }
 
 function handleChannelSelect(event) {
-    if(Blacklist != null) {
-        let guildId = event.guildId;
-        Cache.channelBlacklist = (guildId == null) ? null : Blacklist[guildId];
-    }
     let channelId = event.channelId;
     if(channelId != null) {
         Cache.channelId = channelId;
@@ -3450,18 +3440,12 @@ async function handleSend(channelId, message, forceSimple) {
     let prefixMatch = prefixRegex.exec(content);
     if(channelConfig == null) {
         if(prefixMatch != null) {
-            if(Cache.channelBlacklist !== 1)
-                channelConfig = Utils.NewChannelConfig(channelId);
+            channelConfig = Utils.NewChannelConfig(channelId);
         }
         else return null;
     }
     if(prefixMatch != null) content = content.substring(prefixMatch[0].length);
     else if(!channelConfig.e) return null;
-
-    if(Cache.channelBlacklist === 1) {
-        if(prefixMatch != null) message.content = content;
-        return null;
-    }
 
     let noencprefixMatch = noencprefixRegex.exec(content);
     if(noencprefixMatch != null) {
@@ -3483,7 +3467,7 @@ async function handleSend(channelId, message, forceSimple) {
     let payload = Utils.PayloadEncode(messageBytes);
 
     let channel = Discord.getChannel(channelId);
-    if(forceSimple || Cache.channelBlacklist === 2 || (channel.type === 0 && !Discord.can(EMBED_LINKS_CHECK, Discord.getCurrentUser(), channel))) {
+    if(forceSimple || (channel.type === 0 && !Discord.can(EMBED_LINKS_CHECK, Discord.getCurrentUser(), channel))) {
        message.content = payload + " `SimpleDiscordCrypt`";
     }
     else {
@@ -3571,23 +3555,6 @@ function LockMessages(initial) {
             unlockMessage();
         messageLocks = [];
     }
-}
-
-async function LoadBlacklist() {
-    let blacklistString = Utils.Utf8BytesToString(await Utils.DownloadFile(BlacklistUrl));
-    let blacklistRegex = /^\s*(\d{1,20})(E?)/gm;
-    Blacklist = {};
-    let record;
-    while((record = blacklistRegex.exec(blacklistString)) != null) {
-        Blacklist[record[1]] = (record[2] === 'E') ? 2 : 1;
-    }
-
-    for(let i = 1;; i++) {
-        if(await Utils.RefreshCache() || i === 10) break;
-        await Utils.Sleep(i * 200);
-    }
-
-    if(Cache.channelBlacklist === 1) MenuBar.Update();
 }
 
 function HandleDispatch(event) {
@@ -3856,8 +3823,6 @@ function Load()
     }
 
     Utils.Log("loaded");
-
-    LoadBlacklist();
 }
 
 function Unload()
