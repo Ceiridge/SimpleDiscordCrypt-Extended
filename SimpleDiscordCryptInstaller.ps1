@@ -191,7 +191,7 @@ if(requireGrab != null) {
 	const localStorage = window.localStorage;
 	const CspDisarmed = true;
 
-	require('https').get("https://github.com/Ceiridge/SimpleDiscordCrypt-Extended/raw/master/SimpleDiscordCrypt.user.js", (response) => {
+	require('https').get("https://raw.githubusercontent.com/Ceiridge/SimpleDiscordCrypt-Extended/master/SimpleDiscordCrypt.user.js", (response) => {
 		response.setEncoding('utf8');
 		let data = "";
 		response.on('data', (chunk) => data += chunk);
