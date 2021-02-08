@@ -1327,7 +1327,7 @@ function Init(nonInvasive)
     modules.UserCache = findModuleByUniqueProperties( [ 'getUser', 'getUsers', 'getCurrentUser' ], nonInvasive);
     if(modules.UserCache == null) { if(!nonInvasive) Utils.Error("UserCache not found."); return 0; }
 
-    modules.ChannelCache = findModuleByUniqueProperties( [ 'getChannel', 'getGuildChannels', 'getDMFromUserId' ], nonInvasive);
+    modules.ChannelCache = findModuleByUniqueProperties( [ 'getChannel', 'getDMFromUserId' ], nonInvasive);
     if(modules.ChannelCache == null) { if(!nonInvasive) Utils.Error("ChannelCache not found."); return 0; }
 
     modules.SelectedChannelStore = findModuleByUniqueProperties( [ 'getChannelId', 'getVoiceChannelId', 'getLastSelectedChannelId' ], nonInvasive);
