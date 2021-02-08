@@ -13,7 +13,11 @@ To install it as a [userscript](https://github.com/Ceiridge/SimpleDiscordCrypt-E
 Please do not download this plugin from untrusted sources, for example there is one in Chrome web store with the same name.<br>
 <br>
 This is a fork of the original *SimpleDiscordCrypt* repository that aims to fix bugs and issues faster and to add more features. The original project by An0 can be found [here](https://gitlab.com/An0/SimpleDiscordCrypt).
-<br>
+### Improvements over the orignal version
+- Manual updates => no trust required
+- Bugfixes
+- Less dependent on random image CDNs when loading icons
+
 # Tips and Tricks
 **Right click on the lock icon** to open the menu<br>
 <br>
