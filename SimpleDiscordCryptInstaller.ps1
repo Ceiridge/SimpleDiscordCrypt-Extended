@@ -183,26 +183,121 @@ process._linkedBinding = electronBindingHook;
 
 	[void](New-Item "$pluginPath\SimpleDiscordCryptLoader.js" -Type File -Force -Value @'
 let requireGrab = require;
-if(requireGrab != null) {
+if (requireGrab != null) {
 	const require = requireGrab;
 
-	if(window.chrome != null && chrome.storage != null) delete chrome.storage;
-	
+	if (window.chrome != null && chrome.storage != null) delete chrome.storage;
+
 	const localStorage = window.localStorage;
 	const CspDisarmed = true;
 
-	require('https').get("https://raw.githubusercontent.com/Ceiridge/SimpleDiscordCrypt-Extended/master/SimpleDiscordCrypt.user.js", (response) => {
-		response.setEncoding('utf8');
-		let data = "";
-		response.on('data', (chunk) => data += chunk);
-		response.on('end', () => eval(data));
-	});
-	
+	// SDCEx Manual Updates. Why should you trust a service not to steal your keys?
+	var tempDlHelper = window.tempDlHelper = {
+		updateInfoName: "SimpleDiscordCryptExUpdateInfo",
+		https: require("https"),
+		latestVersion: 0,
+		cachedObject: null,
+		downloadAndEval: function () {
+			tempDlHelper.https.get(`https://raw.githubusercontent.com/Ceiridge/SimpleDiscordCrypt-Extended/${encodeURIComponent(tempDlHelper.latestVersion)}/SimpleDiscordCrypt.user.js`, {
+				headers: {
+					"User-Agent": navigator.userAgent // A User-Agent is recommended
+				}
+			}, (response) => {
+				response.setEncoding('utf8');
+				let data = "";
+				response.on('data', (chunk) => data += chunk);
+				response.on('end', async () => {
+					tempDlHelper.updateUpdateObject("savedScript", data); // Save current version of the script
+					tempDlHelper.updateUpdateObject("version", tempDlHelper.latestVersion);
+					tempDlHelper.finish();
+
+					eval(data);
+				});
+			});
+		},
+		updateUpdateObject: function (key, value) {
+			let dbObj = JSON.parse(localStorage.getItem(tempDlHelper.updateInfoName)); // Localstorage can only store strings
+			dbObj[key] = value;
+			localStorage.setItem(tempDlHelper.updateInfoName, JSON.stringify(dbObj));
+		},
+		getLatestVersion: function () {
+			return new Promise(resolve => {
+				tempDlHelper.https.get("https://api.github.com/repos/Ceiridge/SimpleDiscordCrypt-Extended/git/refs/heads/master", {
+					headers: {
+						"User-Agent": navigator.userAgent // Needs a User-Agent
+					}
+				}, response => {
+					response.setEncoding("utf8");
+					let data = "";
+					response.on('data', (chunk) => data += chunk);
+					response.on('end', () => {
+						let responseJson = JSON.parse(data);
+						resolve(responseJson["object"]["sha"]);
+					});
+				}); // Get latest commit sha
+			});
+		},
+		finish: function () {
+			delete tempDlHelper;
+			delete window.tempDlHelper;
+		},
+		userInteract: function (apply) {
+			if (apply) {
+				tempDlHelper.downloadAndEval(); // Finishes for me
+			} else {
+				eval(tempDlHelper.cachedObject["savedScript"]);
+				tempDlHelper.finish();
+			}
+		}
+	}
+
+	async function tmpAsyncFnc() {
+		tempDlHelper.latestVersion = await tempDlHelper.getLatestVersion();
+
+		if (localStorage.getItem(tempDlHelper.updateInfoName) === null) { // If no version exists, download, execute and set
+			localStorage.setItem(tempDlHelper.updateInfoName, "{}"); // Empty json object
+			tempDlHelper.downloadAndEval();
+		} else {
+			tempDlHelper.cachedObject = JSON.parse(localStorage.getItem(tempDlHelper.updateInfoName));
+			let currentVersion = tempDlHelper.cachedObject["version"];
+
+			if (currentVersion != tempDlHelper.latestVersion) {
+				let dialogAnswer = 0;
+				let electronObj = require("electron");
+				let dialogObj = electronObj.remote.dialog;
+				let shellObj = electronObj.shell;
+
+				while (dialogAnswer === 0) { // Open the blocking dialog again if the first button was clicked
+					dialogAnswer = dialogObj.showMessageBoxSync(null, {
+						type: "question",
+						buttons: ["View changes", "Apply latest update", "Execute saved version"],
+						defaultId: 0,
+						title: "New SimpleDiscordCrypt Extended Update",
+						message: "A new SimpleDiscordCrypt Extended version has been found."
+					});
+
+					if (dialogAnswer === 0) {
+						shellObj.openExternal(`https://github.com/Ceiridge/SimpleDiscordCrypt-Extended/compare/${encodeURIComponent(currentVersion)}..master`);
+					}
+				}
+
+				tempDlHelper.userInteract(dialogAnswer === 1); // Apply if second button was clicked
+			} else {
+				tempDlHelper.userInteract(false); // Just eval the saved script and finish
+			}
+		}
+	}
+	tmpAsyncFnc();
+	delete tmpAsyncFnc;
+
+
+
+
 	const electron = require('electron');
 	const remote = electron.remote;
-	if(remote != null) {
+	if (remote != null) {
 		let originalPreloadScript = remote.getCurrentWindow().PreloadScript;
-		if(originalPreloadScript != null) {
+		if (originalPreloadScript != null) {
 			process.electronBinding('command_line').appendSwitch('preload', originalPreloadScript);
 			electron.contextBridge.exposeInMainWorld = (name, object) => window[name] = object;
 			require(originalPreloadScript);
@@ -210,8 +305,7 @@ if(requireGrab != null) {
 	}
 	/*if(typeof process !== 'undefined')
 		process.once('loaded', () => { delete window.require; delete window.module; });*/
-}
-else console.log("Uh-oh, looks like this version of electron isn't rooted yet");
+} else console.log("Uh-oh, looks like this version of electron isn't rooted yet");
 '@)
 
 	'FINISHED'
