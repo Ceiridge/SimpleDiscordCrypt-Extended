@@ -1364,9 +1364,7 @@ function Init(nonInvasive)
         nodeHttps = require('https');
 		nodeHttpsOptions = { agent: new nodeHttps.Agent({ keepAlive: true }), timeout: 120000 };
 		
-		// SDCEx Delete node implementation from the main window to prevent BD scripts from remotely executing stuff, although it could probably easily be bypassed
-		delete window.require;
-		delete window.module;
+		// SDCEx Deleting window.require and window.module doesn't seem possible for now. Maybe it should be fixed in the future to prevent RCEs?
     }
 
     Object.assign(Utils, {
