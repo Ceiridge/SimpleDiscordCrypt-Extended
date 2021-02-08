@@ -5,7 +5,7 @@
 
 Discord message end-to-end client side encryption plugin with automatic key exchange. Also runs without BetterDiscord.<br>
 <br>
-If you have `Discord installed`, use the [installer](https://github.com/Ceiridge/SimpleDiscordCrypt-Extended/blob/master/SimpleDiscordCryptInstaller.ps1) (Click on the link, click on *Raw*, press *Ctrl+S* to download)<br>
+If you have `Discord installed`, use the [installer](https://github.com/Ceiridge/SimpleDiscordCrypt-Extended/raw/master/SimpleDiscordCryptInstaller.ps1) (*Alt+Click* the link to download)<br>
 For `mobile` you should try the Kiwi Browser, it's Chromium based and supports extensions, such as Tampermonkey, with which you can install the userscript (see below).<br>
 [`Firefox` is kind of supported](https://addons.mozilla.org/en-US/firefox/addon/simplediscordcrypt/) but there is incompatibility because of https://bugzilla.mozilla.org/show_bug.cgi?id=1048931<br>
 To install it as a [userscript](https://github.com/Ceiridge/SimpleDiscordCrypt-Extended/raw/master/SimpleDiscordCrypt.user.js) (with [Tampermonkey](https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo)) or include the js file somehow else<br>
