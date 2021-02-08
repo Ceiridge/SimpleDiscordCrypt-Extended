@@ -2020,7 +2020,7 @@ function Init(nonInvasive)
                         author: {
                             name: "-----SYSTEM MESSAGE-----",
                             icon_url: "https://i.imgur.com/pFuRfDE.png",
-                            url: "https://gitlab.com/An0/SimpleDiscordCrypt"
+                            url: "https://github.com/Ceiridge/SimpleDiscordCrypt-Extended"
                         },
                         description: sysmsg,
                         footer: {
@@ -3479,7 +3479,7 @@ async function handleSend(channelId, message, forceSimple) {
             author: {
                 name: "-----ENCRYPTED MESSAGE-----",
                 icon_url: "https://i.imgur.com/pFuRfDE.png",
-                url: "http://gitlab.com/An0/SimpleDiscordCrypt"
+                url: "https://github.com/Ceiridge/SimpleDiscordCrypt-Extended"
             },
             description: payload,
             footer: {
