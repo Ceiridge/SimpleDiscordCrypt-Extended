@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name         SimpleDiscordCrypt
+// @name         SimpleDiscordCrypt Extended
 // @namespace    https://github.com/Ceiridge/SimpleDiscordCrypt-Extended
 // @version      1.4
 // @description  I hope people won't start calling this SDC ^_^
@@ -25,6 +25,7 @@
 // ==/UserScript==
 
 // Credits for inspiration to the original DiscordCrypt
+// Credits for the original SimpleDiscordCrypt: https://gitlab.com/An0/SimpleDiscordCrypt
 
 (function() {
 
@@ -1327,6 +1328,7 @@ function Init(nonInvasive)
     modules.UserCache = findModuleByUniqueProperties( [ 'getUser', 'getUsers', 'getCurrentUser' ], nonInvasive);
     if(modules.UserCache == null) { if(!nonInvasive) Utils.Error("UserCache not found."); return 0; }
 
+	// SDCEx ChannelCache Init Fix
     modules.ChannelCache = findModuleByUniqueProperties( [ 'getChannel', 'getDMFromUserId' ], nonInvasive);
     if(modules.ChannelCache == null) { if(!nonInvasive) Utils.Error("ChannelCache not found."); return 0; }
 
@@ -1360,7 +1362,11 @@ function Init(nonInvasive)
     let nodeHttpsOptions;
     if(typeof(require) !== 'undefined') {
         nodeHttps = require('https');
-        nodeHttpsOptions = { agent: new nodeHttps.Agent({ keepAlive: true }), timeout: 120000 };
+		nodeHttpsOptions = { agent: new nodeHttps.Agent({ keepAlive: true }), timeout: 120000 };
+		
+		// SDCEx Delete node implementation from the main window to prevent BD scripts from remotely executing stuff, although it could probably easily be bypassed
+		delete window.require;
+		delete window.module;
     }
 
     Object.assign(Utils, {
