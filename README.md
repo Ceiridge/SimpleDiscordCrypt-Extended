@@ -12,6 +12,7 @@ To install it as a [userscript](https://github.com/Ceiridge/SimpleDiscordCrypt-E
 <br>
 Please do not download this plugin from untrusted sources, for example there is one in Chrome web store with the same name.<br>
 <br>
+This is a fork of the original *SimpleDiscordCrypt* repository that aims to fix bugs and issues faster and to add more features. The original project by An0 can be found [here](https://gitlab.com/An0/SimpleDiscordCrypt).
 <br>
 # Tips and Tricks
 **Right click on the lock icon** to open the menu<br>
@@ -123,3 +124,10 @@ To uninstall, just delete it from %localappdata% and make new shortcuts.<br>
 
 𝘚𝘪𝘮𝘱𝘭𝘦𝘋𝘪𝘴𝘤𝘰𝘳𝘥𝘊𝘳𝘺𝘱𝘵<br>
 Or according to google: simple discord crypt
+
+# Trademarks
+SimpleDiscordCrypt-Extended is released into the public domain according to the LGPL 3.0 license by the copyright holders.
+
+Disclaimer: This repository and the used names "Discord", "Hammer & Chisel" in this project are not affiliated with or endorsed by Discord Inc., Hammer & Chisel Inc. or other third parties. This repository and the used name "Discord" are also not affiliated with any existing trademarks.
+
+This repository does not infringe any copyright of proprietary software, as it only adds features to Discord on the end user's computer, without having any copyright-protected code or text included in this repository.
