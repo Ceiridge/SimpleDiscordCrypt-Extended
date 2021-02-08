@@ -40,7 +40,7 @@ const InactiveChannelTime = 7*24*60*60*1000; //1 week
 const IgnoreDiffKeyAge = 7*24*60*60*1000;
 const DiffKeyTrigger = 10;
 
-const HeaderBarSelector = `.title-3qD0b-`;
+const HeaderBarSelector = `.title-3qD0b-`; // Hardcoded element classes that might have to be updated in the future
 const HeaderBarChildrenSelector = `.children-19S4PO`;
 const HeaderBarStatusSelector = `.status-1XNdyw`;
 const HeaderBarChannelNameSelector = `.title-3qD0b- .title-29uC1r, .title-3qD0b- .channelName-qsg_a_`;
