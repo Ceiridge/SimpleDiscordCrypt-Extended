@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         SimpleDiscordCrypt Extended
 // @namespace    https://github.com/Ceiridge/SimpleDiscordCrypt-Extended
-// @version      1.4.1.0
+// @version      1.4.2.0
 // @description  I hope people won't start calling this SDC ^_^
 // @author       An0, leogx9r, Ceiridge
 // @license      LGPLv3 - https://www.gnu.org/licenses/lgpl-3.0.txt
@@ -2876,6 +2876,8 @@ async function decryptAttachment(key, keyHash, message, attachment, channelConfi
     }
 }
 
+const emptyGifB64 = "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==";
+
 const starttimeRegex = /(?:(\d+)h)?(?:(\d+)m)?(?:(\d+)s)?/;
 function createYoutubeEmbed(id, timequery) {
     let embedUrl = `https://youtube.com/embed/${id}`;
@@ -2914,7 +2916,7 @@ function embedImage(message, url, queryString) {
         type: 'image',
         url,
         thumbnail: {
-            url: "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==",
+            url: emptyGifB64,
             width: 1,
             height: 300
         }
@@ -2970,12 +2972,27 @@ function embedSoundcloud(message, url, queryString) {
     if(validSoundcloudRegex.test(queryString))
         embedEncrypted(message, "https://w.soundcloud.com/player/?visual=true&url=" + encodeURIComponent(url), null);
 }
+const tenorRegex = /\/view\/[a-z\-0-9]+-(\d+)/;
+function embedTenor(message, url, queryString) {
+	let match = tenorRegex.exec(url);
+	console.log("DFGDFGFDGDFGDFGdf");
+	console.log(match);
+	if(match != null) {
+		message.embeds.push({
+			type: 'video',
+			url,
+			thumbnail: { url: emptyGifB64, width: 1280, height: 720 }, // Does not have a working thumbnail (yet)
+			video: { url: `https://tenor.com/embed/${encodeURIComponent(match[1])}`, width: 1280, height: 720 }
+		});
+	}
+}
 const linkEmbedders = {
     "www.youtube.com": embedYoutube,
     "youtu.be": embedYoutu,
     "cdn.discordapp.com": embedImage,
     "media.discordapp.net": embedImage,
-    "i.imgur.com": embedImage
+	"i.imgur.com": embedImage,
+	"tenor.com": embedTenor
 };
 if(FixedCsp) Object.assign(linkEmbedders, {
     "i.redd.it": embedImage,

@@ -17,6 +17,7 @@ This is a fork of the original *SimpleDiscordCrypt* repository that aims to fix 
 - Manual updates => no trust required
 - Bugfixes
 - Less dependent on random image CDNs when loading icons
+- More embeds (e.g. Tenor)
 
 # Tips and Tricks
 **Right click on the lock icon** to open the menu<br>
