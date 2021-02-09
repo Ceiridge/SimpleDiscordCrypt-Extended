@@ -1329,7 +1329,7 @@ function Init(nonInvasive)
     if(modules.UserCache == null) { if(!nonInvasive) Utils.Error("UserCache not found."); return 0; }
 
 	// SDCEx ChannelCache Init Fix
-    modules.ChannelCache = findModuleByUniqueProperties( [ 'getChannel', 'getDMFromUserId' ], nonInvasive);
+    modules.ChannelCache = findModuleByUniqueProperties( [ 'getChannel', 'getMutableGuildChannels', 'getDMFromUserId' ], nonInvasive);
     if(modules.ChannelCache == null) { if(!nonInvasive) Utils.Error("ChannelCache not found."); return 0; }
 
     modules.SelectedChannelStore = findModuleByUniqueProperties( [ 'getChannelId', 'getVoiceChannelId', 'getLastSelectedChannelId' ], nonInvasive);
@@ -3856,9 +3856,10 @@ function Unload()
     ImageZoom.observer.disconnect();
 }
 
+var InitTries = 200;
 function TryInit()
 {
-    if(Init(true) !== 0) return;
+    if(Init(--InitTries > 0) !== 0) return;
 
     window.setTimeout(TryInit, 100);
 };
