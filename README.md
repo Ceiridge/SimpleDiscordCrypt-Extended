@@ -35,7 +35,7 @@ If you would like to use the plugin on **multiple devices**; choose a main one, 
 <br>
 <br>
 Here is a link to the original [DiscordCrypt](https://gitlab.com/leogx9r/DiscordCrypt) for BetterDiscord users<br>
-<sup>The two versions are not compatible! SimpleDiscordCrypt also works with BetterDiscord installed.</sup><br>
+<sup>It has been discontinued. The two versions are not compatible! SimpleDiscordCrypt also works with BetterDiscord installed.</sup><br>
 <br>
 <br>
 # Database
