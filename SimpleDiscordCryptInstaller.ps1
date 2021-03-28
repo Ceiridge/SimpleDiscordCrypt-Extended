@@ -269,7 +269,7 @@ if (requireGrab != null) {
 				let shellObj = tempDlHelper.electronObj.shell;
 
 				while (dialogAnswer === 0) { // Open the blocking dialog again if the first button was clicked
-					dialogAnswer = electronObj.ipcRenderer.sendSync("SDCExMessageDialog", {
+					dialogAnswer = tempDlHelper.electronObj.ipcRenderer.sendSync("SDCExMessageDialog", {
                         type: "question",
                         buttons: ["View changes", "Apply latest update", "Execute saved version"],
                         defaultId: 0,
