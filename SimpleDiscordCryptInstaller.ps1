@@ -189,8 +189,13 @@ if (requireGrab != null) {
 	var tempDlHelper = window.tempDlHelper = {
 		updateInfoName: "SimpleDiscordCryptExUpdateInfo",
 		https: require("https"),
+		electronObj: require("electron"),
 		latestVersion: 0,
 		cachedObject: null,
+		finalEval: function(jsCode) {
+			const unsafeWindow = tempDlHelper.electronObj.webFrame.top.context;
+			eval(jsCode);
+		},
 		downloadAndEval: function () {
 			tempDlHelper.https.get(`https://raw.githubusercontent.com/Ceiridge/SimpleDiscordCrypt-Extended/${encodeURIComponent(tempDlHelper.latestVersion)}/SimpleDiscordCrypt.user.js`, {
 				headers: {
@@ -205,7 +210,7 @@ if (requireGrab != null) {
 					tempDlHelper.updateUpdateObject("version", tempDlHelper.latestVersion);
 					tempDlHelper.finish();
 
-					eval(data);
+					tempDlHelper.finalEval(data);
 				});
 			});
 		},
@@ -239,7 +244,7 @@ if (requireGrab != null) {
 			if (apply) {
 				tempDlHelper.downloadAndEval(); // Finishes for me
 			} else {
-				eval(tempDlHelper.cachedObject["savedScript"]);
+				tempDlHelper.finalEval(tempDlHelper.cachedObject["savedScript"]);
 				tempDlHelper.finish();
 			}
 		}
@@ -257,9 +262,8 @@ if (requireGrab != null) {
 
 			if (currentVersion != tempDlHelper.latestVersion) {
 				let dialogAnswer = 0;
-				let electronObj = require("electron");
-				let dialogObj = electronObj.remote.dialog;
-				let shellObj = electronObj.shell;
+				let dialogObj = tempDlHelper.electronObj.remote.dialog;
+				let shellObj = tempDlHelper.electronObj.shell;
 
 				while (dialogAnswer === 0) { // Open the blocking dialog again if the first button was clicked
 					dialogAnswer = dialogObj.showMessageBoxSync(null, {
