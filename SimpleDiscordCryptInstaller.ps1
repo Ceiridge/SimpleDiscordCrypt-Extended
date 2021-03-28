@@ -161,6 +161,10 @@ function electronBindingHook(name) {
 		browserWindowHook.prototype = originalBrowserWindow.prototype;
 		result.BrowserWindow = browserWindowHook;
 		const electron = require('electron');
+
+		electron.ipcMain.on("SDCExMessageDialog", (event, arg) => { // SDCEx - Receive message dialog that informs about updates
+            event.returnValue = electron.dialog.showMessageBoxSync(null, arg);
+        });
 		electron.app.whenReady().then(() => { electron.session.defaultSession.webRequest.onHeadersReceived(onHeadersReceived) });
 	}
 	
@@ -193,7 +197,7 @@ if (requireGrab != null) {
 		latestVersion: 0,
 		cachedObject: null,
 		finalEval: function(jsCode) {
-			const unsafeWindow = tempDlHelper.electronObj.webFrame.top.context;
+			const unsafeWindow = tempDlHelper.electronObj.webFrame.top.context; // Expose an unsafeWindow, so that SDC can work with it
 			eval(jsCode);
 		},
 		downloadAndEval: function () {
@@ -262,17 +266,16 @@ if (requireGrab != null) {
 
 			if (currentVersion != tempDlHelper.latestVersion) {
 				let dialogAnswer = 0;
-				let dialogObj = tempDlHelper.electronObj.remote.dialog;
 				let shellObj = tempDlHelper.electronObj.shell;
 
 				while (dialogAnswer === 0) { // Open the blocking dialog again if the first button was clicked
-					dialogAnswer = dialogObj.showMessageBoxSync(null, {
-						type: "question",
-						buttons: ["View changes", "Apply latest update", "Execute saved version"],
-						defaultId: 0,
-						title: "New SimpleDiscordCrypt Extended Update",
-						message: "A new SimpleDiscordCrypt Extended version has been found."
-					});
+					dialogAnswer = electronObj.ipcRenderer.sendSync("SDCExMessageDialog", {
+                        type: "question",
+                        buttons: ["View changes", "Apply latest update", "Execute saved version"],
+                        defaultId: 0,
+                        title: "New SimpleDiscordCrypt Extended Update",
+                        message: "A new SimpleDiscordCrypt Extended version has been found."
+                    });
 
 					if (dialogAnswer === 0) {
 						shellObj.openExternal(`https://github.com/Ceiridge/SimpleDiscordCrypt-Extended/compare/${encodeURIComponent(currentVersion)}..master`);
