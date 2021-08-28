@@ -3749,15 +3749,21 @@ function Load()
 
     PopupManager.Inject();
 
+	// SDCEx Safe Methods List
+	const EXECUTE_CALL_SAFE_METHODS = ["SdcDownloadUrl", "SdcDecryptDl"];
+
 	const executeCall = (event, caller, code) => {
-        let match = /^\s*([^\s(]+)\s*\((.*)\)$/s.exec(code);
-        if(match != null) {
-            event.preventDefault();
-            let method = match[1];
-            let params = JSON.parse(`[${match[2].replace(/'/g, '"')}]`);
-            Discord.window[method].apply(this, params);
-        }
-    };
+		let match = /^\s*([^\s(]+)\s*\((.*)\)$/s.exec(code);
+		if(match != null) {
+			event.preventDefault();
+			let method = match[1];
+			let params = JSON.parse(`[${match[2].replace(/'/g, '"')}]`);
+
+			if(EXECUTE_CALL_SAFE_METHODS.includes(method)) {
+				Discord.window[method].apply(this, params);
+			}
+		}
+	};
     const scriptLink = function(event) {
         return executeCall(event, this, this.attributes.href.value.substr(11));
     };
