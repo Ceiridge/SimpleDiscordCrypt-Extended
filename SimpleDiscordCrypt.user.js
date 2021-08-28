@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         SimpleDiscordCrypt Extended
 // @namespace    https://github.com/Ceiridge/SimpleDiscordCrypt-Extended
-// @version      1.5.1.3
+// @version      1.6.1.3
 // @description  I hope people won't start calling this SDC ^_^
 // @author       An0, leogx9r, Ceiridge
 // @license      LGPLv3 - https://www.gnu.org/licenses/lgpl-3.0.txt
@@ -1340,6 +1340,13 @@ function Init(nonInvasive)
     modules.PrivateChannelManager = findModuleByUniqueProperties( [ 'openPrivateChannel', 'ensurePrivateChannel', 'closePrivateChannel' ], nonInvasive);
     if(modules.PrivateChannelManager == null) { if(!nonInvasive) Utils.Error("PrivateChannelManager not found."); return 0; }
 
+	// SDCEx Anti-Tracking
+	modules.ScienceTracker = findModuleByUniqueProperties( [ 'track', 'getCampaignParams' ], nonInvasive);
+	if(modules.ScienceTracker == null) { Utils.Error("Analytics not found. Ignoring..."); }
+
+	modules.DiscordApiConstants = findModuleByUniqueProperties( [ 'API_HOST', 'TOKEN_KEY', 'INVITE_ENDPOINT' ], nonInvasive);
+	if(modules.DiscordApiConstants == null) { Utils.Error("DiscordApiConstants not found. Ignoring..."); }
+
     //modules.MessageCache = findModuleByUniqueProperties([ '_channelMessages', 'getOrCreate', 'clearCache' ], nonInvasive);
     //if(modules.MessageCache == null) { if(!nonInvasive) Utils.Error("MessageCache not found."); return 0; }
 
@@ -2447,6 +2454,62 @@ function Init(nonInvasive)
             hookFunction('Premium', 'canUseAnimatedEmojis');
         }
     }
+
+	// SDCEx Anti-Tracking
+	if(modules.ScienceTracker != null) {
+		if(modules.ScienceTracker.track) {
+			modules.ScienceTracker.track = () => {}; // Replace track function
+		}
+
+		if(modules.DiscordApiConstants != null) {
+			if(modules.DiscordApiConstants.Endpoints) {
+				delete modules.DiscordApiConstants.Endpoints.TRACK;
+			}
+
+			for(const objectName of ["AnalyticEvents", "WebAnalyticsEvents", "WebAnalyticsPageLoads", "AnalyticsLocations", "PageAnalyticsLocations", "AnalyticsGameOpenTypes", "AnalyticsUserStatusTypes", "AnalyticsOverlayLocations", "AnalyticsPages", "AnalyticsSections", "AnalyticsObjects", "AnalyticsSections", "AnalyticsObjectTypes", "DIRECT_ANALYTICS_LOCATION"]) { // This is what happens when Tencent buys shares of your company.
+				let objectNamedObject = modules.DiscordApiConstants[objectName];
+				for(const objectMember in objectNamedObject) {
+					delete objectNamedObject[objectMember];
+				}
+			}
+		}
+
+		// Timeout required for Sentry to initialize
+		setTimeout(() => {
+			// This is required, because __SENTRY__ is not exposed to the Electron Isolated Context
+			const sentryDisableScript = `
+				// Disable Sentry
+				if(window.__SENTRY__ && window.__SENTRY__.logger) {
+					window.__SENTRY__.logger.disable();
+				}
+
+				if(window.DiscordSentry && window.DiscordSentry.getCurrentHub) {
+					let sentryHub = window.DiscordSentry.getCurrentHub();
+					sentryHub.getClient().close(0);
+					sentryHub.getStackTop().scope.clear();
+				}
+	
+				// Restore hooked console methods by Sentry
+				for (let consoleMethod in window.console) {
+					if (!window.console[consoleMethod].__sentry_original__) continue;
+					window.console[consoleMethod] = window.console[consoleMethod].__sentry_original__;
+				}
+			`;
+			eval(sentryDisableScript); // The web client does not have an isolated context, but a blocking Content Security Policy
+
+			try {
+				let scriptElement = document.createElement("script");
+				scriptElement.innerHTML = sentryDisableScript;
+				Discord.window.document.body.appendChild(scriptElement);
+
+				setTimeout(() => {
+					Discord.window.document.body.removeChild(scriptElement);
+				}, 1000);
+			} catch(scriptErr) {
+				// Ignore
+			}
+		}, 10000);
+	}
 
     Style.Inject();
 
@@ -3603,6 +3666,11 @@ function LockMessages(initial) {
 }
 
 function HandleDispatch(event) {
+	// SDCEx Anti-Tracking
+	if(event.type == "TRACK") {
+		return;
+	}
+
     let handler = eventHandlers[event.type];
     if(handler !== undefined) {
         return handler.apply(this, arguments);
