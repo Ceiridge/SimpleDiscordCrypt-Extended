@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         SimpleDiscordCrypt Extended
 // @namespace    https://github.com/Ceiridge/SimpleDiscordCrypt-Extended
-// @version      1.6.1.3
+// @version      1.6.1.4
 // @description  I hope people won't start calling this SDC ^_^
 // @author       An0, leogx9r, Ceiridge
 // @license      LGPLv3 - https://www.gnu.org/licenses/lgpl-3.0.txt
@@ -2962,7 +2962,7 @@ function embedYoutu(message, url, queryString) {
     let match = youtuRegex.exec(queryString);
     if(match != null) message.embeds.push(createYoutubeEmbed(match[1], match[2]));
 }
-const imageRegex = /\.(?:png|jpe?g|gif|webp)$/i;
+const imageRegex = /^[^?]*\.(?:png|jpe?g|gif|webp)(?:$|\?)/i;
 function embedImage(message, url, queryString) {
     if(!imageRegex.test(queryString)) return;
 
@@ -3018,7 +3018,11 @@ function embedEncrypted(message, url, queryString) {
     }
 }
 function embedMega(message, url, queryString) {
-    if(!queryString.startsWith("embed")) url = "https://mega.nz/embed" + queryString;
+    if(!queryString.startsWith("embed")) {
+        if(queryString.startsWith("file"))
+            queryString = queryString.substr(4);
+        url = "https://mega.nz/embed" + queryString;
+    }
     embedEncrypted(message, url, null);
 }
 const validSoundcloudRegex = /^[^\/]+\/[^\/?]+(\?|$)/;
@@ -3055,7 +3059,7 @@ if(FixedCsp) Object.assign(linkEmbedders, {
     "mega.nz": embedMega
 });
 
-const MENTION_EVERYONE_CHECK = { data: 0x20000n };
+const MENTION_EVERYONE_CHECK = 0x20000n;
 const everyoneRegex = /(?<!https?:\/\/[^\s]*)@(?:everyone|here)/;
 const roleMentionRegex = /<@&(\d{16,20})>/g;
 const urlRegex = /(?:<https?:\/\/(?:[^\s\/?\.#]+\.)+(?:[^\s\/?\.#]+)\/[^\s<>'"]+>|https?:\/\/((?:[^\s\/?\.#]+\.)+(?:[^\s\/?\.#]+))\/([^\s<>'"]+))/g;
@@ -3539,7 +3543,7 @@ function handleDeletes(event) {
     Discord.original_dispatch.apply(this, arguments);
 }
 
-const EMBED_LINKS_CHECK = { data: 0x4000n };
+const EMBED_LINKS_CHECK = 0x4000n;
 const prefixRegex = /^(?::?ENC(?:(?:_\w*)?:|\b)|<:ENC:\d{1,20}>)\s*/;
 const noencprefixRegex = /^(?::?NOENC:?|<:NOENC:\d{1,20}>)\s*/; //not really expecting an emoji
 async function handleSend(channelId, message, forceSimple) {
