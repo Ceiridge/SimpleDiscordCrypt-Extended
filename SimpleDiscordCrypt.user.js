@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         SimpleDiscordCrypt Extended
 // @namespace    https://github.com/Ceiridge/SimpleDiscordCrypt-Extended
-// @version      1.6.2.1
+// @version      1.6.2.2
 // @description  I hope people won't start calling this SDC ^_^
 // @author       An0, leogx9r, Ceiridge
 // @license      LGPLv3 - https://www.gnu.org/licenses/lgpl-3.0.txt
@@ -1311,7 +1311,7 @@ function Init(final)
     Discord = { window: (typeof(unsafeWindow) !== 'undefined') ? unsafeWindow : window };
 
     const webpackUtil = Utils.Webpack();
-    if(webpackUtil == null) { Utils.Error("Webpack not found."); return 0; }
+    if(webpackUtil == null) { if(final) Utils.Error("Webpack not found."); return 0; }
 
     const { findModule, findModuleByUniqueProperties } = webpackUtil;
 
