@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         SimpleDiscordCrypt Extended
 // @namespace    https://github.com/Ceiridge/SimpleDiscordCrypt-Extended
-// @version      1.6.3.0
+// @version      1.6.3.1
 // @description  I hope people won't start calling this SDC ^_^
 // @author       An0, leogx9r, Ceiridge
 // @license      LGPLv3 - https://www.gnu.org/licenses/lgpl-3.0.txt
@@ -830,12 +830,12 @@ const MenuBar = {
             if(keySelectDropdown.checked) dropdownOn();
             else dropdownOff();
         };
-        keySelectDropdown.onblur = () => { setTimeout(() => { //:active in FF is only valid after the event
-            if(!keySelectDropdown.matches(':active')) {
+        keySelectDropdown.onblur = () => {
+            if(!keySelectDropdown.matches(':hover')) {
                 keySelectDropdown.checked = false;
                 dropdownOff()
             }
-        }, 0)};
+        };
 
         this.toggleOnButton.oncontextmenu = this.toggleOffButton.oncontextmenu = (e) => {
             e.preventDefault();
