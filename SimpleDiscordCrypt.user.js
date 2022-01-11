@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         SimpleDiscordCrypt Extended
 // @namespace    https://github.com/Ceiridge/SimpleDiscordCrypt-Extended
-// @version      1.6.3.1
+// @version      1.6.3.2
 // @description  I hope people won't start calling this SDC ^_^
 // @author       An0, leogx9r, Ceiridge
 // @license      LGPLv3 - https://www.gnu.org/licenses/lgpl-3.0.txt
@@ -41,18 +41,18 @@ const InactiveChannelTime = 7*24*60*60*1000; //1 week
 const IgnoreDiffKeyAge = 7*24*60*60*1000;
 const DiffKeyTrigger = 10;
 
-const HeaderBarSelector = `.title-3qD0b-`; // Hardcoded element classes that might have to be updated in the future
-const HeaderBarChildrenSelector = `.children-19S4PO`;
-const HeaderBarStatusSelector = `.status-1XNdyw`;
-const HeaderBarChannelNameSelector = `.title-3qD0b- .title-29uC1r, .title-3qD0b- .channelName-qsg_a_`;
+const HeaderBarSelector = `.title-31SJ6t`;
+const HeaderBarChildrenSelector = `.children-3xh0VB`;
+const HeaderBarStatusSelector = `.status-12NUUC`;
+const HeaderBarChannelNameSelector = `.title-31SJ6t .title-17SveM, .title-31SJ6t .channelName-3aS_Eg`;
 const BackdropSelector = `div[class*="backdrop"]`;
-const ModalClass = 'layer-2KE1M9';
-const ImageWrapperImgSelector = `.imageWrapper-2p5ogY > img`;
+const ModalClass = 'layer-1Ixpg3';
+const ImageWrapperImgSelector = `.imageWrapper-oMkQl4 > img`;
 const ModalImgSelector = `.${ModalClass} ${ImageWrapperImgSelector}`;
-const MessageScrollerSelector = `.scroller-2LSbBU`;
-const ChatInputSelector = `.scrollableContainer-2NUZem`;
-const MessageImgSelector = `.message-2qnXI6 img`;
-const ChatImageSelector = `${MessageScrollerSelector} .imageZoom-1n-ADA img`;
+const MessageScrollerSelector = `.scroller-kQBbkU`;
+const ChatInputSelector = `.scrollableContainer-15eg7h`;
+const MessageImgSelector = `.message-2CShn3 img`;
+const ChatImageSelector = `${MessageScrollerSelector} .imageZoom-3yLCXY img`;
 
 const htmlEscapeDiv = document.createElement('div');
 function HtmlEscape(string) { htmlEscapeDiv.textContent = string; return htmlEscapeDiv.innerHTML; }
