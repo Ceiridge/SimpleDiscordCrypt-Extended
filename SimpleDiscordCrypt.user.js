@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         SimpleDiscordCrypt Extended
 // @namespace    https://github.com/Ceiridge/SimpleDiscordCrypt-Extended
-// @version      1.8.0.0
+// @version      1.8.0.1
 // @description  I hope people won't start calling this SDC ^_^
 // @author       An0, leogx9r, Ceiridge
 // @license      LGPLv3 - https://www.gnu.org/licenses/lgpl-3.0.txt
@@ -1320,7 +1320,7 @@ function Init(final)
     modules.MessageQueue = findModuleByUniqueProperties([ 'enqueue', 'handleSend', 'handleEdit' ]);
     if(modules.MessageQueue == null) { if(final) Utils.Error("MessageQueue not found."); return 0; }
 
-    modules.MessageDispatcher = findModuleByUniqueProperties([ 'dispatch', 'maybeDispatch', 'dirtyDispatch' ]);
+    modules.MessageDispatcher = findModuleByUniqueProperties([ 'dispatch', 'maybeDispatch' ]);
     if(modules.MessageDispatcher == null) { if(final) Utils.Error("MessageDispatcher not found."); return 0; }
 
     modules.UserCache = findModuleByUniqueProperties([ 'getUser', 'getUsers', 'getCurrentUser' ]);
@@ -3846,7 +3846,7 @@ function LockMessages() {
     })()};
 
     UnlockMessages = (lifted) => {
-        if(!lifted) Discord.detour_dispatch = Discord.dispatch;
+        if(!lifted) Discord.detour_dispatch = HandleDispatch;
         for(let unlockMessage of messageLocks)
             unlockMessage();
         messageLocks = [];
