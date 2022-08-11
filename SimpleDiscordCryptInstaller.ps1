@@ -40,13 +40,13 @@ function RootElectron([string]$discordIconPath, [string]$exeName, [string]$path,
 		$shortcut.IconLocation = $path + $iconLocation
 	}
 	
-	$electronLink = "$workingDirectory\electron.exe"
+	$electronLink = "$workingDirectory\Discord.exe" #used to be electron.exe
 	if(!(Test-Path $electronLink)) {
 		[void](New-Item -Path $electronLink -Value "$workingDirectory\$exeName" -ItemType HardLink)
 	}
 	
 	$shortcut.TargetPath = $env:WINDIR+'\System32\cmd.exe'
-	$shortcut.Arguments = "/c `"set NODE_OPTIONS=-r ../../SimpleDiscordCrypt/NodeLoad.js && start ^`"^`" ^`"$path\Update.exe^`" --processStart electron.exe`""
+	$shortcut.Arguments = "/c `"set NODE_OPTIONS=-r ../../SimpleDiscordCrypt/NodeLoad.js && start ^`"^`" ^`"$path\Update.exe^`" --processStart Discord.exe`""
 	$shortcut.WindowStyle = 7
 	$shortcut.Save()
 

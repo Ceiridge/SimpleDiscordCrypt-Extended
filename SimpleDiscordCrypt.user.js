@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         SimpleDiscordCrypt Extended
 // @namespace    https://github.com/Ceiridge/SimpleDiscordCrypt-Extended
-// @version      1.8.0.1
+// @version      1.8.0.2
 // @description  I hope people won't start calling this SDC ^_^
 // @author       An0, leogx9r, Ceiridge
 // @license      LGPLv3 - https://www.gnu.org/licenses/lgpl-3.0.txt
@@ -3761,8 +3761,8 @@ async function handleInstantUploads(channelId, fileList, draftType) {
     }
 }
 
-async function handleCloudUpload(channelId) {
-    let key = await getChannelKey(channelId);
+async function handleCloudUpload() {
+    let key = await getChannelKey(this.channelId);
     if(key == null) return await Discord.cloudUpload.apply(this, arguments);
 
     try {
