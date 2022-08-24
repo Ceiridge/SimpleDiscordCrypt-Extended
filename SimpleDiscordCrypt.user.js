@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         SimpleDiscordCrypt Extended
 // @namespace    https://github.com/Ceiridge/SimpleDiscordCrypt-Extended
-// @version      1.8.0.3
+// @version      1.8.0.5
 // @description  I hope people won't start calling this SDC ^_^
 // @author       An0, leogx9r, Ceiridge
 // @license      LGPLv3 - https://www.gnu.org/licenses/lgpl-3.0.txt
@@ -1320,7 +1320,7 @@ function Init(final)
     modules.MessageQueue = findModuleByUniqueProperties([ 'enqueue', 'handleSend', 'handleEdit' ]);
     if(modules.MessageQueue == null) { if(final) Utils.Error("MessageQueue not found."); return 0; }
 
-    modules.MessageDispatcher = findModuleByUniqueProperties([ 'dispatch', 'maybeDispatch' ]);
+    modules.MessageDispatcher = findModuleByUniqueProperties([ 'dispatch', 'wait' ]);
     if(modules.MessageDispatcher == null) { if(final) Utils.Error("MessageDispatcher not found."); return 0; }
 
     modules.UserCache = findModuleByUniqueProperties([ 'getUser', 'getUsers', 'getCurrentUser' ]);
@@ -2686,20 +2686,20 @@ function Init(final)
 
 async function handleMessage(event) {
     if(!await processMessage(event.message))
-        Discord.original_dispatch.apply(this, arguments);
+        return await Discord.original_dispatch.apply(this, arguments);
 }
 async function handleMessages(event) {
     for(let message of event.messages.slice()) //in case they reverse the array
         await processMessage(message);
 
-    Discord.original_dispatch.apply(this, arguments);
+    return await Discord.original_dispatch.apply(this, arguments);
 }
 async function handleSearch(event) {
     for(let group of event.messages)
         for(let message of group)
             await processMessage(message);
 
-    Discord.original_dispatch.apply(this, arguments);
+    return await Discord.original_dispatch.apply(this, arguments);
 }
 async function handleUpdate(event) {
     let message = event.message;
@@ -2711,7 +2711,7 @@ async function handleUpdate(event) {
     }
 
     if(!await processMessage(message))
-        Discord.original_dispatch.apply(this, arguments);
+        return await Discord.original_dispatch.apply(this, arguments);
 }
 
 const messageRegex = /^([⠀-⣿]{16,}) `(?:SimpleDiscordCrypt|𝘚𝘪𝘮𝘱𝘭𝘦𝘋𝘪𝘴𝘤𝘰𝘳𝘥𝘊𝘳𝘺𝘱𝘵)`$/;
@@ -3569,16 +3569,16 @@ function handleChannelSelect(event) {
         //Update after event is processed by Discord
     }
 
-    Discord.original_dispatch.apply(this, arguments);
+    return Discord.original_dispatch.apply(this, arguments);
 }
 
 function handleDelete(event) {
     Utils.MessageDeleteEvent(event.id);
-    Discord.original_dispatch.apply(this, arguments);
+    return Discord.original_dispatch.apply(this, arguments);
 }
 function handleDeletes(event) {
     Utils.MessageDeleteBulkEvent(event.ids);
-    Discord.original_dispatch.apply(this, arguments);
+    return Discord.original_dispatch.apply(this, arguments);
 }
 
 const EMBED_LINKS_CHECK = 0x4000n;
@@ -3813,7 +3813,7 @@ async function handleUploadFileToCloud() {
 var clearAttachmentBlockedChannels = new Set();
 function handleClearAttachments(event) {
     if(!clearAttachmentBlockedChannels.has(event.channelId))
-        Discord.original_dispatch.apply(this, arguments);
+        return Discord.original_dispatch.apply(this, arguments);
 }
 
 const eventHandlers = {
@@ -3839,10 +3839,10 @@ function LockMessages() {
 
             await new Promise((resolve) => { messageLocks.push(resolve) });
 
-            return Discord.detour_dispatch.apply(this, arguments);
+            return await Discord.detour_dispatch.apply(this, arguments);
         }
 
-        Discord.original_dispatch.apply(this, arguments);
+        return await Discord.original_dispatch.apply(this, arguments);
     })()};
 
     UnlockMessages = (lifted) => {
@@ -3864,7 +3864,7 @@ function HandleDispatch(event) {
         return handler.apply(this, arguments);
     }
 
-    Discord.original_dispatch.apply(this, arguments);
+    return Discord.original_dispatch.apply(this, arguments);
 }
 
 var dbSaveInterval;
