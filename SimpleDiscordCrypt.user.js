@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         SimpleDiscordCrypt Extended
 // @namespace    https://github.com/Ceiridge/SimpleDiscordCrypt-Extended
-// @version      1.8.0.5
+// @version      1.8.0.6
 // @description  I hope people won't start calling this SDC ^_^
 // @author       An0, leogx9r, Ceiridge
 // @license      LGPLv3 - https://www.gnu.org/licenses/lgpl-3.0.txt
@@ -1338,8 +1338,8 @@ function Init(final)
     modules.FileUploader = findModuleByUniqueProperties([ 'upload', 'cancel', 'instantBatchUpload' ]);
     if(modules.FileUploader == null) { if(final) Utils.Error("FileUploader not found."); return 0; }
 
-    modules.CloudUploadPrototype = findModuleByUniqueProperties([ 'CloudFileUpload' ])?.CloudFileUpload.prototype;
-    if(modules.CloudUploadPrototype == null) { if(final) Utils.Error("CloudFileUpload not found."); return 0; }
+    modules.CloudUploadPrototype = findModuleByUniqueProperties([ 'CloudUpload' ])?.CloudUpload.prototype;
+    if(modules.CloudUploadPrototype == null) { if(final) Utils.Error("CloudUpload not found."); return 0; }
 
     modules.CloudUploadHelper = findModule(x => x.ZP?.getUploadPayload)?.ZP;
     if(modules.CloudUploadHelper == null) { if(final) Utils.Error("CloudUploadHelper not found."); return 0; }
