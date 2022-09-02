@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         SimpleDiscordCrypt Extended
 // @namespace    https://github.com/Ceiridge/SimpleDiscordCrypt-Extended
-// @version      1.8.0.8
+// @version      1.8.0.9
 // @description  I hope people won't start calling this SDC ^_^
 // @author       An0, leogx9r, Ceiridge
 // @license      LGPLv3 - https://www.gnu.org/licenses/lgpl-3.0.txt
@@ -44,7 +44,7 @@ const DiffKeyTrigger = 10;
 const HeaderBarSelector = `.title-31SJ6t`;
 const HeaderBarChildrenSelector = `.children-3xh0VB`;
 const HeaderBarStatusSelector = `.status-12NUUC`;
-const HeaderBarChannelNameSelector = `.title-31SJ6t .title-17SveM, .title-31SJ6t .channelName-3aS_Eg`;
+const HeaderBarChannelNameSelector = `.title-31SJ6t .titleWrapper-24Kyzc, .title-31SJ6t .channelName-3aS_Eg`;
 const BackdropSelector = `div[class*="backdrop"]`;
 const ModalClass = 'layer-1Ixpg3';
 const ImageWrapperImgSelector = `.imageWrapper-oMkQl4 > img`;
