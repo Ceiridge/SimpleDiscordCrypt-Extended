@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         SimpleDiscordCrypt Extended
 // @namespace    https://github.com/Ceiridge/SimpleDiscordCrypt-Extended
-// @version      1.9.1.0
+// @version      1.9.1.1
 // @description  I hope people won't start calling this SDC ^_^
 // @author       An0, leogx9r, Ceiridge
 // @license      LGPLv3 - https://www.gnu.org/licenses/lgpl-3.0.txt
@@ -1244,8 +1244,11 @@ var Utils = {
 
         let webpackExports;
 
-        if(typeof BdApi !== "undefined" && BdApi?.findModuleByProps && BdApi?.findModule) {
-            return this.cachedWebpack = { findModule: BdApi.findModule, findModuleByUniqueProperties: (props) => BdApi.findModuleByProps.apply(null, props) };
+        if(typeof BdApi !== "undefined" && BdApi?.Webpack) {
+            const getModuleOptions = { searchExports: true };
+            const { getModule } = BdApi.Webpack;
+            const findModule = (filter) => getModule(filter, getModuleOptions);
+            return this.cachedWebpack = { findModule, findModuleByUniqueProperties: (propNames) => findModule(module => propNames.every(prop => module[prop] !== undefined)) };
         }
         else if(Discord.window.webpackChunkdiscord_app != null) {
             const ids = ['__extra_id__'];
