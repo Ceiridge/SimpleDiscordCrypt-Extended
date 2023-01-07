@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         SimpleDiscordCrypt Extended
 // @namespace    https://github.com/Ceiridge/SimpleDiscordCrypt-Extended
-// @version      1.9.1.2
+// @version      1.9.1.3
 // @description  I hope people won't start calling this SDC ^_^
 // @author       An0, leogx9r, Ceiridge
 // @license      LGPLv3 - https://www.gnu.org/licenses/lgpl-3.0.txt
@@ -2930,7 +2930,8 @@ async function decryptAttachment(key, keyHash, message, attachment, channelConfi
         }
         else {
             let id = Patcher.FreeImageId++;
-            url = `https://raw.githubusercontent.com/Ceiridge/SimpleDiscordCrypt-Extended/master/images/internalkey1700.png#${id}`;
+			// Hacky fix for viewing images because of CSP
+            url = `https://media.tenor.com/RrTEJmKKjwsAAAAi/chub-cat.gif#${id}`;
             let bitmap = await createImageBitmap(blob); //resets image rotation it seems
             width = bitmap.width;
             height = bitmap.height;
